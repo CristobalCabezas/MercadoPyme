@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load humanize %}
+
+
+<table class="table">
+    <br>
+    <br>
+    <br>
+    <thead>
+        <tr>
+            <th> Imagen </th>
+            <th> Producto </th>
+            <th> Cantidad </th>
+            <th> Precio por unidad </th>
+            <th> Precio total </th>
+            <th> Acciones </th>
+        </tr>
+
+    </thead>
+    <tbody>
+
+
+
+        {% for c in carro %}
+        {% with product=c.element %}
+        <tr>
+
+
+            <td><img src="{{product.imagen.url}}" width="100" height="100" alt="Imagen producto"></td>
+            <td>{{ product.nombre_producto}}</td> 
+            <td>{{ c.quantity}}</td>
+            <td>${{ c.precio_producto | intcomma}}</td>
+            <td>${{ c.total_price | intcomma}}</td>
+            <td>
+                <form action="{% url 'PaginaWeb:cart_remove' product.id %}" method="post">
+                    <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                    {% csrf_token %}
+                </form>
+            </td>
+            {% endwith %}
+            {% endfor%}
+        </tr>
+
+        <tr>
+
+            <td>Total</td>
+            <td colspan="3"></td>
+            <td>
+
+                <strong>${{carro.get_total_price | intcomma}}</strong>
+            </td>
+        </tr>
+
+
+
+    </tbody>
+
+   
+</table>
+
+
+
+
+
+<div id="section-cta">
+    <div class="container">
+        <h3>  </h3>
+
+        <button type="button" class="btn btn-primary float-right">Pagar</button>
+        <br>
+
+    </div>
+</div>
+
+<br>
+<br>
+<br>
+
+
+{% endblock %}
+
+{% include 'partials/pagination.html' with page_obj=elements%}
